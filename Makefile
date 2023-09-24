@@ -9,6 +9,8 @@ INCLUDE := -I./lib/LuaJIT/src
 
 OBJ := src/main.o
 
+NPROC ?= 2
+
 prebuild:
 	git submodule update --init --recursive
 
@@ -22,7 +24,7 @@ run: build
 	./fbs
 
 luajit: prebuild
-	make -j `nproc` -C ./lib/LuaJIT
+	make -j $(NPROC) -C ./lib/LuaJIT
 
 fbs: $(OBJ) 
 	$(CC) -o $@ $^ $(LDFLAGS)
