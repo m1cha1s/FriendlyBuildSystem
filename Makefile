@@ -1,9 +1,10 @@
 .PHONY: prebuild build clean run luajit
 
 CC := gcc
-CFLAGS := -Wall -Werror -Wpedantic
+CFLAGS := -Wall -Werror -Wpedantic -O2
 
-LDFLAGS := -L./lib/LuaJIT/src/libluajit-5.1.dll.a
+#LDFLAGS := -L./lib/LuaJIT/src/ -lm -lluajit
+LDFLAGS := ./lib/LuaJIT/src/libluajit.a -lm
 INCLUDE := -I./lib/LuaJIT/src
 
 OBJ := src/main.o
@@ -18,13 +19,13 @@ clean:
 	rm fbs
 
 run: build
-	fbs
+	./fbs
 
 luajit: prebuild
-	make -C lib/luajit
+	make -j `nproc` -C ./lib/LuaJIT
 
 fbs: $(OBJ) 
-	$(CC) $(LDFLAGS) -o $@ $^	
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c
 	$(CC) $(CFLAFGS) $(INCLUDE) -c -o $@ $<
